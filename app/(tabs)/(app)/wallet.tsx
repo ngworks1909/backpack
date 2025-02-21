@@ -4,8 +4,8 @@ import { useLocalSearchParams, useSearchParams } from 'expo-router/build/hooks'
 
 
 export default function wallet() {
-    const {slotId}: {slotId: string} = useLocalSearchParams()
+    const {purchaseId}: {purchaseId?: string} = useLocalSearchParams()
   return (
-    <WalletPage slotId = {slotId} />
+    <WalletPage purchaseId = {purchaseId} />
   )
 }

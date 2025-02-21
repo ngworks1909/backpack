@@ -6,7 +6,7 @@ import { LinearGradient } from "expo-linear-gradient"
 // Define the props for our SkeletonLoader componen
 
 const StyledLinearGradient = LinearGradient
-export default function CardSkeleton(){
+export default function CardSkeleton({className}: {className? : string}){
   // Create a reference for the animation
   const animatedValue = useRef(new Animated.Value(0)).current
 
@@ -34,7 +34,7 @@ export default function CardSkeleton(){
   })
 
   return (
-    <View className={`overflow-hidden h-40 w-[49%]`} style = {{boxShadow: "0px 3px 2px rgba(0, 0, 0, 0.35)", borderRadius: 12}}>
+    <View className={`overflow-hidden h-40 w-[49%] ${className}`} style = {{boxShadow: "0px 3px 2px rgba(0, 0, 0, 0.35)", borderRadius: 12}}>
       <StyledLinearGradient
         colors={["#57575766", "#575757c0"]}
         start={{ x: 0, y: 0 }}

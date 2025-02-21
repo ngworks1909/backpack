@@ -50,5 +50,30 @@ export const useSlots = (cardId: string) => {
     fetchSlots();
   }, [cardId]);
 
-  return { loading, cards, error };
+  function increasePurchase(cardId: string){
+    if(cards?.cardId !== cardId) return
+    setCards((prevCards) => {
+      if (!prevCards || prevCards.slots.length === 0) return prevCards; // Handle empty state
+    
+      // Create a copy of the slots array
+      const updatedSlots = [...prevCards.slots];
+    
+      // Increment the purchases count of the first slot (index 0)
+      updatedSlots[0] = {
+        ...updatedSlots[0],
+        _count: {
+          purchases: updatedSlots[0]._count.purchases + 1
+        }
+      };
+    
+      // Return the updated cards state
+      return {
+        ...prevCards,
+        slots: updatedSlots
+      };
+    });
+    
+  }
+
+  return { loading, cards, error, increasePurchase };
 };

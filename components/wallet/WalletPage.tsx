@@ -1,18 +1,21 @@
 import React, { useState } from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native'
 import TopBar from '../common/TopBar'
 import BottomBar from '../common/BottomBar'
 import { Ionicons, FontAwesome } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import api from '@/api/api'
 import { useWallet } from '@/hooks/useWallet'
+import CardSkeleton from '../skeletons/CardSkeleton'
 
-export default function WalletPage({slotId}: {slotId: string}) {
+export default function WalletPage({purchaseId}: {purchaseId?: string}) {
 
   const {loading, amount, error} = useWallet()
   
   function handlePay(paymentType: "Wallet" | "Razorpay"){
-    router.push(`/pay?slotId=${slotId}&paymentType=${paymentType}`);
+    if(purchaseId){
+        router.push(`/pay?purchaseId=${purchaseId}&paymentType=${paymentType}`);
+    }
   }
 
   return (
@@ -20,13 +23,16 @@ export default function WalletPage({slotId}: {slotId: string}) {
         <TopBar />
         <View className='flex-1 '>
             <View className='w-full bg-white flex flex-row justify-between px-4 py-4 items-center'>
-            <Ionicons name="arrow-back-outline" onPress={(e) => { e.preventDefault(); router.back() }} className='' size={24} color="black" />
+            <Pressable onPress={(e) => { e.preventDefault(); router.back() }}>
+            <Ionicons name="arrow-back-outline"  size={24} color="black" />
+            </Pressable>
             <View className='flex flex-row items-center gap-3'>
             <View className='bg-gray-300 h-16 w-16 items-center justify-center rounded-full'>
                <Text className='text-2xl font-geistBold'>₹</Text>
             </View>
-            <View>
-                <Text className='font-geistBold text-lg'>₹200.0</Text>
+            <View className='flex flex-col justify-between h-16'>
+                {loading ? <CardSkeleton className='h-6 w-[70px]'/> : <Text className='font-geistBold text-lg w-[70px]' numberOfLines={1} >₹{amount}</Text>}
+                
                 <Text className='font-geistMedium text-lg'>Balance</Text>
             </View>
             </View>
@@ -51,19 +57,21 @@ export default function WalletPage({slotId}: {slotId: string}) {
                         <Text className='text-white font-geistBold text-2xl'>Deposit</Text>
                     </TouchableOpacity>
                 </View>
-                <View className='mt-10 flex-1'>
-                    <TouchableOpacity onPress={(e) => {e.preventDefault(); handlePay("Wallet")}} className='bg-emerald-500 py-4 rounded-full'>
-                        <Text className='text-center text-white font-geistBold text-xl'>Pay with Wallet</Text>
-                    </TouchableOpacity>
-                    <View className='mt-4 flex flex-row items-center justify-center gap-3'>
-                        <Text className='h-[1px] w-[30%] bg-[#ffffffb4] rounded-full'/>
-                        <Text className='text-center text-white font-geistMedium text-lg'>OR</Text>
-                        <Text className='h-[1px] w-[30%] bg-[#ffffffb4] rounded-full'/>
-                    </View>
-                    <TouchableOpacity onPress={(e) => {e.preventDefault(); handlePay("Razorpay")}} className='bg-white py-4 rounded-full mt-4'>
-                        <Text className='text-center font-geistBold text-xl'>Pay with UPI</Text>
-                    </TouchableOpacity>
-                </View>
+                {
+                  purchaseId && <View className='mt-10 flex-1'>
+                  <TouchableOpacity onPress={(e) => {e.preventDefault(); handlePay("Wallet")}} className='bg-emerald-500 py-4 rounded-full'>
+                      <Text className='text-center text-white font-geistBold text-xl'>Pay with Wallet</Text>
+                  </TouchableOpacity>
+                  <View className='mt-4 flex flex-row items-center justify-center gap-3'>
+                      <Text className='h-[1px] w-[30%] bg-[#ffffffb4] rounded-full'/>
+                      <Text className='text-center text-white font-geistMedium text-lg'>OR</Text>
+                      <Text className='h-[1px] w-[30%] bg-[#ffffffb4] rounded-full'/>
+                  </View>
+                  <TouchableOpacity onPress={(e) => {e.preventDefault(); handlePay("Razorpay")}} className='bg-white py-4 rounded-full mt-4'>
+                      <Text className='text-center font-geistBold text-xl'>Pay with UPI</Text>
+                  </TouchableOpacity>
+              </View>
+                }
             </View>
         </View>
         <BottomBar/>

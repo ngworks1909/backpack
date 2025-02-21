@@ -4,6 +4,7 @@ import React from 'react'
 import { TouchableOpacity, Text, Image, View } from 'react-native'
 import { useSetRecoilState } from 'recoil'
 import CardSkeleton from '../skeletons/CardSkeleton';
+import { logout } from '@/actions/auth/auth';
 
 export default function Main() {
   const setItem = useSetRecoilState(ItemState);
@@ -15,6 +16,7 @@ export default function Main() {
             {Array(6).fill(0).map((_, index) => <CardSkeleton key={index} />)}
         </> : <>
         {!error && cards.map((card, index) => (
+          
             <View key={index} className="bg-[#575757c0] h-40 w-[49%] p-4 rounded-xl">
               <View className="flex flex-row justify-around gap-2">
                 <Image source={require("@/assets/images/bitcoin.png")} className="w-12 h-12 rounded-full" />

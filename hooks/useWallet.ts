@@ -23,7 +23,7 @@ export const useWallet = () => {
                         setLoading(false)
                         return
                     }
-                    const response = await api.get<WalletResponse>('/api/wallet/fetchWallet');
+                    const response = await api.get<WalletResponse>('/api/wallet/fetchWallet', {headers: {'authorization': session}});
                     const data:WalletResponse = response.data
                     if(data.success){
                         setAmount(data.amount ?? 0);

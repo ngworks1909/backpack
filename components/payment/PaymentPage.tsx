@@ -4,10 +4,11 @@ import TopBar from '../common/TopBar';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
 
-export default function PaymentPage({ purchaseId }: { purchaseId: string }) {
+export default function PaymentPage({ purchaseId, paymentType }: { purchaseId: string, paymentType: "Razorpay" | "Wallet" }) {
   const [amount, setAmount] = useState("");
   const [keyboardHeight, setKeyboardHeight] = useState(0); // Track keyboard height
   const inputRef = useRef<TextInput>(null);
+  const [paying, setPaying] = useState(false);
 
   // Auto focus the input when component mounts
   useEffect(() => {
@@ -41,7 +42,10 @@ export default function PaymentPage({ purchaseId }: { purchaseId: string }) {
 
 
   const handleClick = () => {
-    
+    setPaying(true)
+    setTimeout(() => {
+      setPaying(false);
+    }, 2000);
   }
 
 
@@ -55,6 +59,8 @@ export default function PaymentPage({ purchaseId }: { purchaseId: string }) {
     
     setAmount(cleanValue);
   };
+
+  const disabled = (amount ? false : true) || paying
 
   return (
     <View className='min-h-screen flex-1 bg-[#191919]'>
@@ -81,10 +87,11 @@ export default function PaymentPage({ purchaseId }: { purchaseId: string }) {
         {/* Adjust the bottom padding based on keyboard height */}
         <View style={{ paddingBottom: keyboardHeight + 20 }}>
           <TouchableOpacity
-            className={`${amount === "" ? "bg-gray-400" : "bg-white"} rounded-full`}
-            disabled={amount ? false : true}
+            className={`${disabled ? "bg-gray-400" : "bg-white"} rounded-full`}
+            disabled={disabled}
+            onPress={handleClick}
           >
-            <Text className='text-black text-center text-xl font-geistBold py-3'>Pay</Text>
+            <Text className='text-black text-center text-xl font-geistBold py-3'>{paying ? "Paying..." : "Pay"}</Text>
           </TouchableOpacity>
         </View>
       </View>

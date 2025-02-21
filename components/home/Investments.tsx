@@ -3,18 +3,36 @@ import React, { useContext, useEffect } from 'react'
 import { GestureResponderEvent, Image, Text, TouchableOpacity, View } from 'react-native'
 import SlotSkeleton from '../skeletons/SlotSkeleton';
 import { SocketContext } from '../providers/SocketProvider';
-import { hold_slot, slot_collected } from '@/constants/message';
+import { decrement_slot, hold_slot, slot_collected } from '@/constants/message';
 import { router } from 'expo-router';
 import { z } from 'zod';
 
 export default function Investments({cardId}: {cardId: string}) {
-  const {loading, cards, error} = useSlots(cardId);
+  const {loading, cards, error, increasePurchase} = useSlots(cardId);
   const socket = useContext(SocketContext)
+
 
   const onPress = (e: GestureResponderEvent, slotId: string) => {
     e.preventDefault();
-    router.push(`/wallet?slotId=${slotId}`)
+    if(socket){
+      socket.emit(hold_slot, slotId);
+    }
   }
+
+  useEffect(() => {
+    if(socket){
+      socket.on(slot_collected, (purchaseId: string) => {
+        router.push(`/wallet?purchaseId=${purchaseId}`)
+      })
+
+      socket.on(decrement_slot, (cardId: string) => {
+        increasePurchase(cardId)
+      })
+    }
+  }, [])
+
+
+
   return (
     <View>
       {loading ?

@@ -3,11 +3,12 @@ import { Image, Pressable, Text, View } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSetRecoilState } from 'recoil';
 import { ItemState } from '@/atoms/ItemState';
+import { router } from 'expo-router';
 
 
 export default function BottomBar() {
 
-  type ActiveElement = "home" | "fire" | "plus" | "trend" | "user"
+  type ActiveElement = "home" | "fire" | "wallet" | "trend" | "user"
 
   const [active, setActive] = useState<ActiveElement>("home")
   const setItem = useSetRecoilState(ItemState)
@@ -29,9 +30,9 @@ export default function BottomBar() {
       <MaterialCommunityIcons name="fire" size={24} color={active === "fire" ? "white" : "#787878"}  />
         <Text className={`${active === "fire" ? "text-white" : "text-[#787878]"} text-sm font-geistBold`}>Trending</Text>
       </Pressable>
-      <Pressable onPress={() => handleActive("plus")} className='flex flex-col items-center'>
-      <MaterialCommunityIcons name="plus" size={24} color={active === "plus" ? "white" : "#787878"}/>
-        <Text className={`${active === "plus" ? "text-white" : "text-[#787878]"} text-sm font-geistBold`}>Add</Text>
+      <Pressable onPress={() => {handleActive("wallet"); router.push('/wallet')}} className='flex flex-col items-center'>
+      <MaterialCommunityIcons name="wallet" size={24} color={active === "wallet" ? "white" : "#787878"}/>
+        <Text className={`${active === "wallet" ? "text-white" : "text-[#787878]"} text-sm font-geistBold`}>Wallet</Text>
       </Pressable>
       <Pressable onPress={() => handleActive("trend")} className='flex flex-col items-center'>
       <MaterialCommunityIcons name="trending-up" size={24} color={active === "trend" ? "white" : "#787878"}  />
