@@ -1,0 +1,36 @@
+{
+  "cli": {
+    "version": ">= 15.0.12",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://192.168.0.142:3000",
+        "EXPO_PUBLIC_WS_URL": "http://192.168.0.142:8080"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://backpack-backend-116k.onrender.com",
+        "EXPO_PUBLIC_WS_URL": "https://backpack-backend-trq4.onrender.com"
+      },
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://192.168.0.142:3000",
+        "EXPO_PUBLIC_WS_URL": "http://192.168.0.142:8080"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

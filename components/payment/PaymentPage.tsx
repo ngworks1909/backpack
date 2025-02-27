@@ -3,6 +3,8 @@ import { Keyboard, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View
 import TopBar from '../common/TopBar';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
+import { walletPay } from '@/actions/pay/walletPay';
+import * as SecureStorage from 'expo-secure-store'
 
 export default function PaymentPage({ purchaseId, paymentType }: { purchaseId: string, paymentType: "Razorpay" | "Wallet" }) {
   const [amount, setAmount] = useState("");
@@ -41,11 +43,24 @@ export default function PaymentPage({ purchaseId, paymentType }: { purchaseId: s
   const razrSecret = process.env.EXPO_PUBLIC_RAZORPAY_SECRET 
 
 
-  const handleClick = () => {
-    setPaying(true)
-    setTimeout(() => {
-      setPaying(false);
-    }, 2000);
+  const handleClick = async() => {
+    const session = await SecureStorage.getItemAsync('session');
+    if(!session){
+      router.push('/')
+      return
+    }
+    if(paymentType === "Wallet"){
+      setPaying(true);
+      const response = await walletPay(purchaseId, parseInt(amount), session)
+      if(response.success){
+        router.push('/')
+      }
+      else{
+        console.log(response.message)
+        router.push('/wallet')
+      }
+      setPaying(false)
+    }
   }
 
 
