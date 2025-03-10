@@ -42,19 +42,19 @@ export default function WalletPage({purchaseId}: {purchaseId?: string}) {
                 <View className='flex flex-row flex-wrap gap-[2%]' style={{rowGap:10}}>
                     <TouchableOpacity className='bg-gray-400 py-4 w-[48%] rounded-3xl items-center'>
                         <Image source={require("@/assets/images/deposit.png")}/>
-                        <Text className='text-white font-geistBold text-2xl'>Deposit</Text>
+                        <Text className='text-white font-geistBold text-xl'>Deposit</Text>
                     </TouchableOpacity>
                     <TouchableOpacity className='bg-gray-400 py-4 w-[48%] rounded-3xl items-center'>
                         <Image source={require("@/assets/images/withdraw.png")}/>
-                        <Text className='text-white font-geistBold text-2xl'>Deposit</Text>
+                        <Text className='text-white font-geistBold text-xl'>Withdraws</Text>
                     </TouchableOpacity>
                     <TouchableOpacity className='bg-gray-400 py-4 w-[48%] rounded-3xl items-center'>
                         <Image source={require("@/assets/images/transactions.png")}/>
-                        <Text className='text-white font-geistBold text-2xl'>Deposit</Text>
+                        <Text className='text-white font-geistBold text-xl'>Transactions</Text>
                     </TouchableOpacity>
                     <TouchableOpacity className='bg-gray-400 py-4 w-[48%] rounded-3xl items-center'>
                         <Image source={require("@/assets/images/investments.png")}/>
-                        <Text className='text-white font-geistBold text-2xl'>Deposit</Text>
+                        <Text className='text-white font-geistBold text-xl'>Purchases</Text>
                     </TouchableOpacity>
                 </View>
                 {

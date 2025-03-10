@@ -3,14 +3,13 @@ import React, { useContext, useEffect } from 'react'
 import { GestureResponderEvent, Image, Text, TouchableOpacity, View } from 'react-native'
 import SlotSkeleton from '../skeletons/SlotSkeleton';
 import { SocketContext } from '../providers/SocketProvider';
-import { decrement_slot, hold_slot, slot_collected } from '@/constants/message';
+import { decrement_slot, hold_slot, slot_collected, update_current_slot } from '@/constants/message';
 import { router } from 'expo-router';
-import { z } from 'zod';
+import z from 'zod'
 
 export default function Investments({cardId}: {cardId: string}) {
-  const {loading, cards, error, increasePurchase} = useSlots(cardId);
+  const {loading, cards, error, increasePurchase, updateActiveSlot} = useSlots(cardId);
   const socket = useContext(SocketContext)
-
 
   const onPress = (e: GestureResponderEvent, slotId: string) => {
     e.preventDefault();
@@ -27,6 +26,18 @@ export default function Investments({cardId}: {cardId: string}) {
 
       socket.on(decrement_slot, (cardId: string) => {
         increasePurchase(cardId)
+      })
+
+      socket.on(update_current_slot, (message: string) => {
+        const isValidStart = z.object({
+          start: z.number()
+        }).safeParse(message);
+        if(!isValidStart.success){
+          console.log("Invalid slot update");
+          return
+        }
+        const {start} = isValidStart.data;
+        updateActiveSlot(start)
       })
     }
   }, [])

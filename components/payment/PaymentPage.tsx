@@ -5,6 +5,13 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
 import { walletPay } from '@/actions/pay/walletPay';
 import * as SecureStorage from 'expo-secure-store'
+import { jwtDecode } from 'jwt-decode';
+
+interface jwtClaims{
+  user: {
+    username: string
+  }
+}
 
 export default function PaymentPage({ purchaseId, paymentType }: { purchaseId: string, paymentType: "Razorpay" | "Wallet" }) {
   const [amount, setAmount] = useState("");
@@ -39,8 +46,6 @@ export default function PaymentPage({ purchaseId, paymentType }: { purchaseId: s
     };
   }, []);
 
-  const razrKey = process.env.EXPO_PUBLIC_RAZORPAY_KEY as string
-  const razrSecret = process.env.EXPO_PUBLIC_RAZORPAY_SECRET 
 
 
   const handleClick = async() => {
@@ -49,15 +54,17 @@ export default function PaymentPage({ purchaseId, paymentType }: { purchaseId: s
       router.push('/')
       return
     }
+    const decoded = jwtDecode(session) as jwtClaims;
+    const username = decoded.user.username.toUpperCase()
     if(paymentType === "Wallet"){
       setPaying(true);
       const response = await walletPay(purchaseId, parseInt(amount), session)
       if(response.success){
-        router.push('/')
+        router.push(`/paymentstatus?status=Success&amount=${amount}&purchaseId=${purchaseId}&paymentType=${paymentType}&username=${username}`)
       }
       else{
         console.log(response.message)
-        router.push('/wallet')
+        router.push(`/paymentstatus?status=Fail&amount=${amount}&purchaseId=${purchaseId}&paymentType=${paymentType}&username=${username}`)
       }
       setPaying(false)
     }

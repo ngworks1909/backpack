@@ -75,5 +75,38 @@ export const useSlots = (cardId: string) => {
     
   }
 
-  return { loading, cards, error, increasePurchase };
+  function updateActiveSlot(start: number) {
+    if (!cards || cards.slots.length === 0) return;
+  
+    setCards((prevCards) => {
+      if (!prevCards) return prevCards;
+  
+      // Find the index of the slot with the given `start`
+      const newActiveIndex = prevCards.slots.findIndex(slot => slot.start === start);
+      if (newActiveIndex === -1) return prevCards; // If not found, do nothing
+  
+      // Get the new active slot
+      const newActiveSlot = prevCards.slots[newActiveIndex];
+  
+      // Find the previously active slot (currently at index 0)
+      const prevActiveSlot = prevCards.slots[0];
+  
+      // Remove the new active slot from its position
+      let remainingSlots = prevCards.slots.filter((_, index) => index !== newActiveIndex);
+  
+      // Ensure the previous active slot is placed back in order
+      if (prevActiveSlot.start !== start) {
+        remainingSlots.push(prevActiveSlot); // Add previous active slot at the end
+      }
+  
+      // Place the new active slot at index 0
+      return {
+        ...prevCards,
+        slots: [newActiveSlot, ...remainingSlots]
+      };
+    });
+  }
+  
+
+  return { loading, cards, error, increasePurchase, updateActiveSlot };
 };
